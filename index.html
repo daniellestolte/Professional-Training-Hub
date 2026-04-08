@@ -1107,7 +1107,9 @@ async function callGemini(prompt) {
   try {
     return JSON.parse(raw);
   } catch(e) {
-    throw new Error('Could not parse response — please try again.');
+    // Show the first 300 chars of what we got to help debug
+    const preview = raw.substring(0, 300).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    throw new Error('Parse error. Response started with: ' + preview);
   }
 }
 
