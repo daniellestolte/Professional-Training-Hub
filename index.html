@@ -31,6 +31,14 @@
     --tag-ac-border: #4aa8c8;
     --tag-ad: #ede8f5;
     --tag-ad-border: #9b7ed4;
+    --tag-cfa: #fce8e8;
+    --tag-cfa-border: #e07070;
+    --tag-inv: #e8f5e8;
+    --tag-inv-border: #5aab5a;
+    --tag-xl: #e8f0ff;
+    --tag-xl-border: #5580d4;
+    --tag-eco: #fff3e0;
+    --tag-eco-border: #d4881a;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -205,6 +213,10 @@
   .cat-fp { background: var(--tag-fp); border: 1px solid var(--tag-fp-border); color: var(--accent); }
   .cat-ac { background: var(--tag-ac); border: 1px solid var(--tag-ac-border); color: var(--accent2); }
   .cat-ad { background: var(--tag-ad); border: 1px solid var(--tag-ad-border); color: var(--accent3); }
+  .cat-cfa { background: var(--tag-cfa); border: 1px solid var(--tag-cfa-border); color: #b84444; }
+  .cat-inv { background: var(--tag-inv); border: 1px solid var(--tag-inv-border); color: #2d7a2d; }
+  .cat-xl { background: var(--tag-xl); border: 1px solid var(--tag-xl-border); color: #3a60b4; }
+  .cat-eco { background: var(--tag-eco); border: 1px solid var(--tag-eco-border); color: #b46010; }
 
   /* Main */
   .main {
@@ -322,7 +334,7 @@
   .track-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 10px;
     width: 100%;
     margin-bottom: 32px;
   }
@@ -950,6 +962,11 @@ const TOPICS = {
       'Cost centres and profit centres',
       'Management accounts vs statutory accounts',
       'AASB standards overview',
+      'Not-for-profit and charitable entity accounting',
+      'Grant income accounting and acquittals',
+      'Subsidiary and related entity accounting',
+      'Accounting for leases (AASB 16)',
+      'Impairment of assets',
     ]
   },
   finance: {
@@ -977,7 +994,7 @@ const TOPICS = {
       'Break-even analysis',
       'Margin analysis — gross, operating, net',
       'Reading and interpreting annual reports',
-      'Renewable energy finance basics (for your Brookfield background)',
+      'Renewable energy finance basics',
       'Infrastructure asset valuation concepts',
       'Return on investment (ROI) frameworks',
       'Treasury and cash management basics',
@@ -1010,7 +1027,148 @@ const TOPICS = {
       'Indigenous procurement policy and its implications',
       'Subcontractor management and compliance',
     ]
-  }
+  },
+  cfa: {
+    label: 'CFA Level 1',
+    color: 'cfa',
+    icon: '🎓',
+    topics: [
+      'CFA Level 1 overview — exam structure, weightings and study strategy',
+      'CFA Ethics — Standards of Professional Conduct',
+      'CFA Ethics — the Asset Manager Code and GIPS',
+      'Quantitative methods — time value of money and interest rates',
+      'Quantitative methods — statistical concepts and probability',
+      'Quantitative methods — hypothesis testing',
+      'Quantitative methods — regression and correlation basics',
+      'Economics — supply, demand and market equilibrium',
+      'Economics — elasticity and its applications',
+      'Economics — firm behaviour and market structures',
+      'Economics — aggregate demand, aggregate supply and GDP',
+      'Economics — monetary and fiscal policy',
+      'Economics — international trade and currency exchange rates',
+      'Financial statement analysis — the income statement',
+      'Financial statement analysis — the balance sheet',
+      'Financial statement analysis — the cash flow statement',
+      'Financial statement analysis — ratio analysis and interpretation',
+      'Financial statement analysis — inventories and long-lived assets',
+      'Financial statement analysis — income taxes and deferred tax',
+      'Corporate finance — capital budgeting and project evaluation',
+      'Corporate finance — cost of capital (WACC)',
+      'Corporate finance — capital structure and leverage',
+      'Corporate finance — dividends and share buybacks',
+      'Corporate finance — working capital management',
+      'Equity investments — market structure and efficiency',
+      'Equity investments — equity valuation overview',
+      'Equity investments — industry and company analysis',
+      'Equity investments — DDM, P/E and other valuation multiples',
+      'Fixed income — bond features, types and markets',
+      'Fixed income — bond valuation and yield measures',
+      'Fixed income — interest rate risk and duration',
+      'Fixed income — credit risk and credit analysis',
+      'Derivatives — forwards, futures and swaps overview',
+      'Derivatives — options basics — calls, puts, payoffs',
+      'Alternative investments — private equity, real assets and hedge funds',
+      'Portfolio management — risk, return and diversification',
+      'Portfolio management — the Capital Asset Pricing Model (CAPM)',
+      'Portfolio management — portfolio construction and the IPS',
+    ]
+  },
+  investing: {
+    label: 'Investing & Markets',
+    color: 'inv',
+    icon: '💹',
+    topics: [
+      'How stock markets work — exchanges, brokers and order types',
+      'Understanding shares — what owning equity actually means',
+      'How to read a stock quote and market data',
+      'ETFs and index funds — the case for passive investing',
+      'Active vs passive investing — the evidence',
+      'How to analyse a company — a beginner framework',
+      'Price-to-earnings (P/E) ratio and other valuation multiples',
+      'Dividend investing — how dividends work and yield calculations',
+      'Understanding bonds — why governments and companies borrow',
+      'Interest rates and bond prices — the inverse relationship',
+      'Asset allocation — balancing stocks, bonds and cash',
+      'Diversification and why it reduces risk',
+      'Risk and return — understanding volatility and standard deviation',
+      'Compounding — the most powerful force in investing',
+      'Dollar-cost averaging as an investment strategy',
+      'Superannuation in Australia — how it works and investment options',
+      'Investing as a working holiday visa holder in Australia',
+      'Australian shares — the ASX and franking credits explained',
+      'How to read an annual report as an investor',
+      'ESG investing — environmental, social and governance criteria',
+      'Infrastructure investing — Brookfield, toll roads and utilities',
+      'Real estate investment trusts (REITs)',
+      'Macroeconomic indicators every investor should track',
+      'The Reserve Bank of Australia — how interest rate decisions affect investments',
+      'Inflation and its impact on investment returns',
+      'Currency risk for international investors',
+      'Behavioural finance — why investors make irrational decisions',
+      'Building a simple long-term investment plan',
+    ]
+  },
+  excel: {
+    label: 'Excel & Modelling',
+    color: 'xl',
+    icon: '📋',
+    topics: [
+      'Excel fundamentals — keyboard shortcuts and navigation',
+      'Essential formulas — SUM, AVERAGE, COUNT, IF',
+      'Lookup functions — VLOOKUP, HLOOKUP and XLOOKUP',
+      'INDEX and MATCH — the more powerful alternative to VLOOKUP',
+      'Logical functions — IF, IFS, AND, OR, nested logic',
+      'Text functions — CONCATENATE, LEFT, RIGHT, MID, TRIM',
+      'Date functions — DATE, DATEDIF, EOMONTH, NETWORKDAYS',
+      'Pivot tables — summarising large data sets',
+      'Pivot charts — visualising pivot data',
+      'Conditional formatting — highlighting insights automatically',
+      'Data validation — building error-proof spreadsheets',
+      'Named ranges and structured references',
+      'Financial functions — PV, FV, NPV, IRR, PMT',
+      'Building a clean P&L model from scratch',
+      'Building a cash flow forecast model',
+      'Variance analysis template — budget vs actual',
+      'Scenario manager and data tables for sensitivity analysis',
+      'SUMIF, SUMIFS, COUNTIF, COUNTIFS',
+      'Power Query — importing and transforming data',
+      'Charts and dashboards — presenting financial data clearly',
+      'Excel best practices — model structure and audit trails',
+      'Common Excel errors and how to fix them',
+    ]
+  },
+  economics: {
+    label: 'Economics & Tax',
+    color: 'eco',
+    icon: '🌏',
+    topics: [
+      'Microeconomics basics — supply, demand and price',
+      'How businesses set prices — cost-plus vs market pricing',
+      'Macroeconomics — GDP, unemployment and inflation explained',
+      'The Reserve Bank of Australia — monetary policy and cash rate',
+      'How interest rate changes flow through the economy',
+      'Inflation — causes, types and how it affects your work and savings',
+      'Australian taxation system overview',
+      'Income tax in Australia — how brackets and rates work',
+      'GST — mechanics, registration and reporting',
+      'Fringe Benefits Tax (FBT) — what it is and when it applies',
+      'Payroll tax in the Northern Territory',
+      'Superannuation — employer obligations and guarantee rates',
+      'Tax treatment of grants and government funding',
+      'Not-for-profit tax concessions in Australia',
+      'Capital Gains Tax (CGT) basics',
+      'Australian tax for working holiday visa holders (417)',
+      'Transfer pricing and related-party transactions',
+      'ATO reporting obligations for small to medium businesses',
+      'Business Activity Statements (BAS) — detailed walkthrough',
+      'PAYG withholding and instalments',
+      'Indigenous economic development — policy context in Australia',
+      'Remote area tax concessions and allowances',
+      'Currency and exchange rates — how they work',
+      'Trade, imports and exports — the basics',
+      'Government budgets — how federal and NT budgets work',
+    ]
+  },
 };
 
 // ─── Persistence ──────────────────────────────────────────────────────────────
