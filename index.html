@@ -1305,10 +1305,42 @@ Respond ONLY with valid JSON, no markdown. Mix difficulty: 2 easy recall questio
 
   // ── Request 3: Resources ───────────────────────────────────────────────────
   updateLoadingStep('🔗 Finding resources…');
-  const resourceData = await callGemini(`You are a finance educator. Suggest 4 real, specific online resources for someone learning about "${topic}" in an Australian finance/accounting context.
+  // ── Build curated resource list from safe known URLs ─────────────────────
+  const safeUrls = {
+    ato: 'https://www.ato.gov.au',
+    aasb: 'https://www.aasb.gov.au/pronouncements/accounting-standards',
+    cpa: 'https://www.cpaaustralia.com.au/professional-resources',
+    accountingcoach: 'https://www.accountingcoach.com',
+    khan: 'https://www.khanacademy.org/economics-finance-domain',
+    xero: 'https://www.xero.com/au/resources',
+    investopedia: 'https://www.investopedia.com',
+    cfi: 'https://corporatefinanceinstitute.com/resources',
+    cfa: 'https://www.cfainstitute.org/en/programs/cfa/curriculum',
+    icaa: 'https://www.charteredaccountantsanz.com/tools-and-resources',
+    moneysmart: 'https://moneysmart.gov.au',
+    treasury: 'https://treasury.gov.au',
+  };
 
-Respond ONLY with valid JSON, no markdown. Use only real URLs from trusted sources: ato.gov.au, aasb.gov.au, cpaaustralia.com.au, accountingcoach.com, khanacademy.org, xero.com/au, investopedia.com, corporatefinanceinstitute.com, cfainstitute.org, icaa.org.au, moneysmart.gov.au:
-{"resources":[{"title":"specific page or article title","description":"20-25 words explaining exactly what this resource covers and why it is useful","url":"https://specific-real-url.com/page","type":"article"},{"title":"specific page or article title","description":"20-25 words","url":"https://specific-real-url.com/page","type":"course"},{"title":"specific page or article title","description":"20-25 words","url":"https://specific-real-url.com/page","type":"documentation"},{"title":"specific page or article title","description":"20-25 words","url":"https://specific-real-url.com/page","type":"article"}]}`);
+  const resourceData = await callGemini(`You are a finance educator. Suggest 4 online resources for learning about "${topic}" in an Australian finance/accounting context.
+
+You MUST only use URLs from this exact list — do not invent or modify any URLs. Copy them exactly as shown:
+- ATO (tax, GST, BAS): ${safeUrls.ato}
+- AASB (accounting standards): ${safeUrls.aasb}
+- CPA Australia (professional resources): ${safeUrls.cpa}
+- AccountingCoach (bookkeeping/accounting tutorials): ${safeUrls.accountingcoach}
+- Khan Academy (finance and economics): ${safeUrls.khan}
+- Xero AU (software and accounting guides): ${safeUrls.xero}
+- Investopedia (finance and investing): ${safeUrls.investopedia}
+- CFI (financial modelling and analysis): ${safeUrls.cfi}
+- CFA Institute (CFA curriculum): ${safeUrls.cfa}
+- Chartered Accountants ANZ: ${safeUrls.icaa}
+- MoneySmart (personal finance, super): ${safeUrls.moneysmart}
+- Treasury.gov.au (government finance): ${safeUrls.treasury}
+
+Pick the 4 most relevant sources for "${topic}". Use the exact URL from the list above — do not add any path or subpage.
+
+Respond ONLY with valid JSON, no markdown:
+{"resources":[{"title":"descriptive title for this resource","description":"20-25 words explaining what this site covers and why it is useful for this topic","url":"exact url from list above","type":"article"},{"title":"descriptive title","description":"20-25 words","url":"exact url from list above","type":"course"},{"title":"descriptive title","description":"20-25 words","url":"exact url from list above","type":"documentation"},{"title":"descriptive title","description":"20-25 words","url":"exact url from list above","type":"article"}]}`);
 
   // ── Merge all three responses ──────────────────────────────────────────────
   return {
