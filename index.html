@@ -1251,7 +1251,7 @@ async function callGemini(prompt) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 3000 },
+        generationConfig: { temperature: 0.7, maxOutputTokens: 4096 },
       }),
     }
   );
@@ -1280,28 +1280,35 @@ async function generateLesson(topicObj) {
     advanced: 'Technical depth, nuance and edge cases.',
   };
   const lvl = levelMap[STATE.preferences.level] || levelMap.intermediate;
-  const ctx = `Finance/admin officer at Indigenous property management company, remote NT Australia. Ex-FP&A analyst at Brookfield Renewable. Topic: "${topic}" (${catLabel}). Level: ${lvl}. Use Australian context (GST 10%, AUD amounts).`;
+  const ctx = `The learner is Danielle — a finance/admin officer at an Indigenous property management company in remote NT Australia, previously an FP&A analyst at Brookfield Renewable. Topic: "${topic}" (${catLabel}). Level: ${lvl}. Use Australian context (GST 10%, AUD amounts) wherever relevant.`;
 
   // ── Request 1: Lesson content ──────────────────────────────────────────────
   updateLoadingStep('📖 Generating lesson content…');
-  const lessonData = await callGemini(`You are a finance educator. ${ctx}
+  const lessonData = await callGemini(`You are an expert finance and accounting educator writing a detailed daily lesson brief. ${ctx}
 
-Respond ONLY with valid JSON, no markdown. Fill all fields with real educational content:
-{"title":"string","subtitle":"string","estimatedMins":35,"keyTakeaways":["string","string","string"],"sections":[{"heading":"string","type":"text","content":"string 100-150 words"},{"heading":"string","type":"example","content":"string 100-150 words with real AUD numbers and calculations"},{"heading":"string","type":"text","content":"string 100-150 words"},{"heading":"string","type":"tip","content":"string 60-80 words"}],"realWorldApplication":"string 60-80 words connecting to property management or NT government contracts"}`);
+Write a thorough, genuinely educational lesson. This should feel like reading a great textbook chapter — detailed, clear, and full of real insight. Do not be superficial.
 
-  // ── Request 2: Quiz ────────────────────────────────────────────────────────
-  updateLoadingStep('❓ Generating quiz questions…');
-  const quizData = await callGemini(`You are a finance educator. Create 5 quiz questions about "${topic}" for an intermediate finance/admin professional in Australia.
+Respond ONLY with valid JSON, no markdown, no code fences. All content fields must be rich and detailed:
 
-Respond ONLY with valid JSON, no markdown:
-{"quiz":[{"question":"string","options":["string","string","string","string"],"correct":0,"explanation":"string 20-30 words"},{"question":"string","options":["string","string","string","string"],"correct":1,"explanation":"string 20-30 words"},{"question":"string","options":["string","string","string","string"],"correct":2,"explanation":"string 20-30 words"},{"question":"string","options":["string","string","string","string"],"correct":0,"explanation":"string 20-30 words"},{"question":"string","options":["string","string","string","string"],"correct":3,"explanation":"string 20-30 words"}]}`);
+{"title":"engaging title","subtitle":"one compelling sentence","estimatedMins":45,"keyTakeaways":["specific takeaway 1","specific takeaway 2","specific takeaway 3","specific takeaway 4"],"sections":[{"heading":"What Is [Topic] and Why Does It Matter","type":"text","content":"200-250 word thorough explanation covering the core concept, its purpose, and why any finance professional needs to understand it. Be specific and substantive."},{"heading":"How It Works — The Mechanics","type":"text","content":"200-250 words explaining exactly how this works step by step. Use precise language. Include the underlying logic, not just the surface description."},{"heading":"Worked Example","type":"example","content":"200-250 words walking through a complete realistic example with real AUD numbers and full calculations. Show all workings. Make it feel like a real scenario Danielle might encounter at RPMMS or in her career."},{"heading":"Common Mistakes and Misconceptions","type":"callout","content":"150-200 words covering the most common errors, misconceptions or traps people fall into with this topic. Be specific — name the mistakes clearly."},{"heading":"Practical Application","type":"tip","content":"150-200 words of concrete, actionable guidance on how to apply this knowledge. Connect directly to property management, government contracts, NT operations, or career development."}],"realWorldApplication":"100-120 words connecting this topic specifically to Danielle's work at RPMMS — property maintenance contracts, NTG reporting, Xero, AroFlo, subcontractor invoicing, or Indigenous corporation governance as relevant."}`);
+
+  // ── Request 2: Quiz — pass lesson content so questions are grounded in it ──
+  updateLoadingStep('❓ Generating quiz…');
+  const lessonSummary = (lessonData.sections || []).map(s => s.content).join(' ').substring(0, 1200);
+  const quizData = await callGemini(`You are a finance educator. Create 5 quiz questions STRICTLY based on the following lesson content about "${topic}". Every question must test something explicitly covered in the lesson text below. Do not ask about things not mentioned in the lesson.
+
+LESSON CONTENT:
+${lessonSummary}
+
+Respond ONLY with valid JSON, no markdown. Mix difficulty: 2 easy recall questions, 2 application questions, 1 harder analysis question. Vary which option is correct (not always 0):
+{"quiz":[{"question":"specific question about lesson content","options":["option A","option B","option C","option D"],"correct":0,"explanation":"30-40 word explanation referencing the lesson content"},{"question":"specific question about lesson content","options":["option A","option B","option C","option D"],"correct":2,"explanation":"30-40 word explanation"},{"question":"specific question about lesson content","options":["option A","option B","option C","option D"],"correct":1,"explanation":"30-40 word explanation"},{"question":"application question — what would you do if...","options":["option A","option B","option C","option D"],"correct":3,"explanation":"30-40 word explanation"},{"question":"harder analysis question","options":["option A","option B","option C","option D"],"correct":1,"explanation":"30-40 word explanation"}]}`);
 
   // ── Request 3: Resources ───────────────────────────────────────────────────
   updateLoadingStep('🔗 Finding resources…');
-  const resourceData = await callGemini(`You are a finance educator. Suggest 3 real online resources for learning about "${topic}" in an Australian context.
+  const resourceData = await callGemini(`You are a finance educator. Suggest 4 real, specific online resources for someone learning about "${topic}" in an Australian finance/accounting context.
 
-Respond ONLY with valid JSON, no markdown. Use only real URLs from: ato.gov.au, aasb.gov.au, cpaaustralia.com.au, accountingcoach.com, khanacademy.org, xero.com, investopedia.com, corporatefinanceinstitute.com, icaa.org.au:
-{"resources":[{"title":"string","description":"string 15-20 words","url":"https://real-url.com","type":"article"},{"title":"string","description":"string 15-20 words","url":"https://real-url.com","type":"course"},{"title":"string","description":"string 15-20 words","url":"https://real-url.com","type":"documentation"}]}`);
+Respond ONLY with valid JSON, no markdown. Use only real URLs from trusted sources: ato.gov.au, aasb.gov.au, cpaaustralia.com.au, accountingcoach.com, khanacademy.org, xero.com/au, investopedia.com, corporatefinanceinstitute.com, cfainstitute.org, icaa.org.au, moneysmart.gov.au:
+{"resources":[{"title":"specific page or article title","description":"20-25 words explaining exactly what this resource covers and why it is useful","url":"https://specific-real-url.com/page","type":"article"},{"title":"specific page or article title","description":"20-25 words","url":"https://specific-real-url.com/page","type":"course"},{"title":"specific page or article title","description":"20-25 words","url":"https://specific-real-url.com/page","type":"documentation"},{"title":"specific page or article title","description":"20-25 words","url":"https://specific-real-url.com/page","type":"article"}]}`);
 
   // ── Merge all three responses ──────────────────────────────────────────────
   return {
